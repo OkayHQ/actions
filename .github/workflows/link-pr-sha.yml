@@ -1,0 +1,14 @@
+name: Run Link PR Action
+on:
+  pull_request:
+    types: [ closed ]
+jobs:
+  okay-link-pr-action:
+    uses: OkayHQ/actions/.github/workflows/link-pr-sha-action.yml@v1
+    with:
+      url: ${{ github.event.pull_request.html_url }}
+      sha: ${{ github.sha }}
+      repository: ${{ github.repository_owner }}
+      organization: ${{ github.owner }}
+    secrets:
+      OKAY_API_TOKEN: ${{ secrets.OKAY_API_TOKEN }}

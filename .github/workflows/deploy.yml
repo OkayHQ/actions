@@ -1,0 +1,28 @@
+name: Run Deploy Action
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'Deployed commit sha'
+        required: true
+      environment:
+        description: 'The target environment of the Deploy (e.g. staging, production)'
+        required: true
+      service:
+        description: 'The target service deployed'
+        required: false
+      url:
+        description: 'Url to get more information on the deployment'
+        required: false
+jobs:
+  okay-deploy-action:
+    uses:  OkayHQ/actions/.github/workflows/deploy-action.yml@v1
+    with:
+      sha: ${{ inputs.sha }}
+      environment: ${{ inputs.environment }}
+      repository: ${{ github.repository }}
+      service: ${{ inputs.service }}
+      organization: ${{ github.repository_owner }}
+      url: ${{ inputs.url }}
+    secrets:
+      OKAY_API_TOKEN: ${{ secrets.OKAY_API_TOKEN }}
