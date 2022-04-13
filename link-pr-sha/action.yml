@@ -1,0 +1,28 @@
+name: Link SHA to Pull Request
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: 'The commit of the PR after it is merged to the destination branch'
+        required: true
+      url:
+        description: 'The url for the PR'
+        required: true
+      repository:
+        description: 'The repository for the PR'
+        required: true
+      organization:
+        description: 'The organization for the repository'
+        required: true
+    secrets:
+      OKAY_API_TOKEN:
+        required: true
+jobs:
+  okay-send-link-pr-webhook:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send Okay Webhook
+      env:
+        OKAY_API_TOKEN: ${{ secrets.OKAY_API_TOKEN }}
+      run: |
+        curl -X POST -H "Authorization: Bearer $OKAY_API_TOKEN" -H 'Content-Type: application/json' --data "{\"version\": \"1\", \"event\": \"pr\", \"timestamp\": \"$(date +%Y-%m-%dT%H:%M:%S%z)\", \"properties\": {\"id\": \"link_pr_sha_${{ inputs.url }}_${{ inputs.sha }}\", \"sourceControl\": \"github\", \"action\": \"merge\", \"url\": \"${{ inputs.url }}\", \"repository\": \"$(cut -d'/' -f2 <<<'${{ inputs.repository }}')\", \"sha\": \"${{ inputs.sha }}\", \"organization\": \"${{ inputs.organization }}\"}}" https://app.okayhq.com/api/events/v1

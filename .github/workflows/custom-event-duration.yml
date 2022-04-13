@@ -1,0 +1,30 @@
+name: Run Custom Event Duration Action
+on:
+  workflow_dispatch:
+    inputs:
+      event:
+        description: 'Name of the event'
+        required: true
+      event_unique_id:
+        description: 'The unique id for this event'
+        required: true
+      user:
+        description: 'The github login of the person'
+        required: false
+      metric_name:
+        description: 'The name of the duration metric'
+        required: true
+      metric_duration_ms:
+        description: 'How long did it take? (in milliseconds)'
+        required: true
+jobs:
+  okay-custom-event-duration-action:
+    uses:  OkayHQ/actions/custom-event-duration@v1
+  with:
+    event: ${{ inputs.event }}
+    event_unique_id: ${{ inputs.event_unique_id }}
+    user: ${{ inputs.user }}
+    metric_name: $${{ inputs.metric_name }}
+    metric_duration_ms: ${{ inputs.metric_duration_ms }}
+  secrets:
+    OKAY_API_TOKEN: ${{ secrets.OKAY_API_TOKEN }}
