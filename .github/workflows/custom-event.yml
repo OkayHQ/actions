@@ -1,4 +1,4 @@
-name: Run Custom Event Batch Action
+name: Run Custom Event Action
 on:
   workflow_dispatch:
     inputs:
@@ -11,23 +11,20 @@ on:
       user:
         description: 'The github login of the person'
         required: false
-      metric1_name:
-        description: 'The name of a latency metric (A) (e.g lead time)'
-        required: false
       metric1_duration_ms:
-        description: 'How long something (A) took in milliseconds'
-        required: false
-      metric2_name:
-        description: 'The name of a number metric (B) (e.g. percent build failures today)'
+        description: 'How long something took in milliseconds (e.g. lead time)'
         required: false
       metric2_number:
-        description: 'The value of B'
-        required: false
-      metric3_name:
-        description: 'The name of a count metric (C) (e.g. number of incidents)'
+        description: 'The value of a number metric (e.g. percent build failures today)'
         required: false
       metric3_count:
-        description: 'Number of times something (C) happened'
+        description: 'Number of times something happened (e.g. number of incidents)'
+        required: false
+      label:
+        description: 'Optional label to add to the event'
+        required: false
+      url:
+        description: 'URL to get more information about the event'
         required: false
 jobs:
   okay-custom-event-action:
@@ -36,11 +33,10 @@ jobs:
       event: ${{ inputs.event }}
       event_unique_id: ${{ inputs.event_unique_id }}
       user: ${{ inputs.user }}
-      metric1_name: $${{ inputs.metric1_name }}
       metric1_duration_ms: ${{ inputs.metric1_duration_ms }}
-      metric2_name: $${{ inputs.metric2_name }}
-      metric2_number: ${{ inputs.metric2_duration_ms }}
-      metric3_name: $${{ inputs.metric3_name }}
+      metric2_number: ${{ inputs.metric2_number }}
       metric3_count: ${{ inputs.metric3_count }}
+      label: ${{ inputs.label }}
+      url: ${{ inputs.url }}
     secrets:
       OKAY_API_TOKEN: ${{ secrets.OKAY_API_TOKEN }}
